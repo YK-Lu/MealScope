@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+  tensorflow:
+    image: tensorflow/tensorflow:2.6.1-gpu-jupyter
+    ports:
+      - "8888:8888"  # jupyter
+      - "6006:6006"  # tensorflow board
+    volumes:
+      - /mnt/c/Users/Chin/Desktop/docker-tensorflow:/workspace
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    command: jupyter lab --ip 0.0.0.0 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
+    #command: tail -f /dev/null  # 用 tail 命令保持容器运行
+    deploy:
+      resources:
+        limits:
+          cpus: '10'  # 设置CPU核心数限制
+          memory: 20G  # 设置内存限制
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
